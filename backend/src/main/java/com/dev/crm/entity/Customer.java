@@ -20,16 +20,16 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "First name is required")
+    @NotBlank(message = "{validation.customer.firstName.required}")
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank(message = "{validation.customer.lastName.required}")
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
+    @Email(message = "{validation.customer.email.valid}")
+    @NotBlank(message = "{validation.customer.email.required}")
     @Column(unique = true, nullable = false)
     private String email;
 

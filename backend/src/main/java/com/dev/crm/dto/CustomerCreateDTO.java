@@ -11,14 +11,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerCreateDTO {
 
-    @NotBlank(message = "First name is required")
+    @NotBlank(message = "{validation.customer.firstName.required}")
     private String firstName;
 
-    @NotBlank(message = "Last name is required")
+    @NotBlank(message = "{validation.customer.lastName.required}")
     private String lastName;
 
-    @Email(message = "Email should be valid")
-    @NotBlank(message = "Email is required")
+    @Email(message = "{validation.customer.email.valid}")
+    @NotBlank(message = "{validation.customer.email.required}")
     private String email;
 
     private String phoneNumber;

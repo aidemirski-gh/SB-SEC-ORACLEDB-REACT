@@ -14,7 +14,7 @@ public class CustomerUpdateDTO {
 
     private String lastName;
 
-    @Email(message = "Email should be valid")
+    @Email(message = "{validation.customer.email.valid}")
     private String email;
 
     private String phoneNumber;

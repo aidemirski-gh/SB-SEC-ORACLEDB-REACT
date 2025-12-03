@@ -21,6 +21,7 @@ export interface AuthResponse {
   firstName?: string;
   lastName?: string;
   role: string;
+  languagePreference: string;
 }
 
 export interface LoginRequest {
@@ -34,6 +35,7 @@ export interface RegisterRequest {
   password: string;
   firstName?: string;
   lastName?: string;
+  languagePreference?: string;
 }
 
 class ApiService {
@@ -43,8 +45,11 @@ class ApiService {
 
   private async fetchJson<T>(url: string, options?: RequestInit): Promise<T> {
     const token = this.getAuthToken();
+    const language = localStorage.getItem('i18nextLng') || 'en';
+
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
+      'Accept-Language': language,
       ...options?.headers,
     };
 
@@ -113,6 +118,14 @@ class ApiService {
 
   async getInfo(): Promise<InfoResponse> {
     return this.fetchJson<InfoResponse>(`${API_BASE_URL}/info`);
+  }
+
+  // User preference endpoints
+  async updateUserLanguagePreference(userId: number, languagePreference: string): Promise<void> {
+    await this.fetchJson<void>(`${API_BASE_URL}/users/${userId}/preferences`, {
+      method: 'PATCH',
+      body: JSON.stringify({ languagePreference }),
+    });
   }
 }
 

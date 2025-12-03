@@ -26,17 +26,17 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Username is required")
-    @Size(min = 3, max = 50)
+    @NotBlank(message = "{validation.user.username.required}")
+    @Size(min = 3, max = 50, message = "{validation.user.username.size}")
     @Column(unique = true, nullable = false)
     private String username;
 
-    @NotBlank(message = "Email is required")
-    @Email(message = "Email should be valid")
+    @NotBlank(message = "{validation.user.email.required}")
+    @Email(message = "{validation.user.email.valid}")
     @Column(unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Password is required")
+    @NotBlank(message = "{validation.user.password.required}")
     @Column(nullable = false)
     private String password;
 
@@ -51,6 +51,9 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private boolean enabled = true;
+
+    @Column(name = "language_preference")
+    private String languagePreference = "en";
 
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
