@@ -20,7 +20,7 @@ export interface AuthResponse {
   email: string;
   firstName?: string;
   lastName?: string;
-  role: string;
+  roles: string[];
   languagePreference: string;
 }
 
@@ -36,6 +36,39 @@ export interface RegisterRequest {
   firstName?: string;
   lastName?: string;
   languagePreference?: string;
+}
+
+export interface Role {
+  id: number;
+  name: string;
+  description?: string;
+  systemRole: boolean;
+  userCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserInfo {
+  id: number;
+  username: string;
+  email: string;
+  firstName?: string;
+  lastName?: string;
+  roles: Role[];
+  enabled: boolean;
+  languagePreference: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface Privilege {
+  id: number;
+  name: string;
+  description?: string;
+  category: string;
+  roleCount: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 class ApiService {
@@ -125,6 +158,112 @@ class ApiService {
     await this.fetchJson<void>(`${API_BASE_URL}/users/${userId}/preferences`, {
       method: 'PATCH',
       body: JSON.stringify({ languagePreference }),
+    });
+  }
+
+  // Role management endpoints
+  async getAllRoles(): Promise<Role[]> {
+    return this.fetchJson<Role[]>(`${API_BASE_URL}/roles`);
+  }
+
+  async getRoleById(id: number): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles/${id}`);
+  }
+
+  async createRole(data: { name: string; description?: string }): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateRole(id: number, data: { description?: string }): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteRole(id: number): Promise<void> {
+    await this.fetchJson<void>(`${API_BASE_URL}/roles/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // User management endpoints
+  async getAllUsers(): Promise<UserInfo[]> {
+    return this.fetchJson<UserInfo[]>(`${API_BASE_URL}/users`);
+  }
+
+  async getUserById(id: number): Promise<UserInfo> {
+    return this.fetchJson<UserInfo>(`${API_BASE_URL}/users/${id}`);
+  }
+
+  async updateUserRole(userId: number, roleId: number): Promise<UserInfo> {
+    return this.fetchJson<UserInfo>(`${API_BASE_URL}/users/${userId}/role`, {
+      method: 'PUT',
+      body: JSON.stringify({ roleId }),
+    });
+  }
+
+  // Privilege management endpoints
+  async getAllPrivileges(): Promise<Privilege[]> {
+    return this.fetchJson<Privilege[]>(`${API_BASE_URL}/privileges`);
+  }
+
+  async getPrivilegeById(id: number): Promise<Privilege> {
+    return this.fetchJson<Privilege>(`${API_BASE_URL}/privileges/${id}`);
+  }
+
+  async getPrivilegesByCategory(category: string): Promise<Privilege[]> {
+    return this.fetchJson<Privilege[]>(`${API_BASE_URL}/privileges/category/${category}`);
+  }
+
+  async getPrivilegeCategories(): Promise<string[]> {
+    return this.fetchJson<string[]>(`${API_BASE_URL}/privileges/categories`);
+  }
+
+  async createPrivilege(data: { name: string; description?: string; category?: string }): Promise<Privilege> {
+    return this.fetchJson<Privilege>(`${API_BASE_URL}/privileges`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updatePrivilege(id: number, data: { description?: string; category?: string }): Promise<Privilege> {
+    return this.fetchJson<Privilege>(`${API_BASE_URL}/privileges/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deletePrivilege(id: number): Promise<void> {
+    await this.fetchJson<void>(`${API_BASE_URL}/privileges/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Role privileges management endpoints
+  async getRolePrivileges(roleId: number): Promise<Privilege[]> {
+    return this.fetchJson<Privilege[]>(`${API_BASE_URL}/roles/${roleId}/privileges`);
+  }
+
+  async updateRolePrivileges(roleId: number, privilegeIds: number[]): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles/${roleId}/privileges`, {
+      method: 'PUT',
+      body: JSON.stringify({ privilegeIds }),
+    });
+  }
+
+  async addPrivilegeToRole(roleId: number, privilegeId: number): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles/${roleId}/privileges/${privilegeId}`, {
+      method: 'POST',
+    });
+  }
+
+  async removePrivilegeFromRole(roleId: number, privilegeId: number): Promise<Role> {
+    return this.fetchJson<Role>(`${API_BASE_URL}/roles/${roleId}/privileges/${privilegeId}`, {
+      method: 'DELETE',
     });
   }
 }

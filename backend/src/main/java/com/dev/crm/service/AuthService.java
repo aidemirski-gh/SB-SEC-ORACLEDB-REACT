@@ -3,9 +3,11 @@ package com.dev.crm.service;
 import com.dev.crm.dto.AuthResponseDTO;
 import com.dev.crm.dto.LoginRequestDTO;
 import com.dev.crm.dto.RegisterRequestDTO;
+import com.dev.crm.entity.Role;
 import com.dev.crm.entity.User;
 import com.dev.crm.exception.ResourceConflictException;
 import com.dev.crm.exception.ResourceNotFoundException;
+import com.dev.crm.repository.RoleRepository;
 import com.dev.crm.repository.UserRepository;
 import com.dev.crm.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.Locale;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider tokenProvider;
     private final AuthenticationManager authenticationManager;
@@ -47,6 +50,13 @@ public class AuthService {
             throw new ResourceConflictException(message);
         }
 
+        // Load default user role
+        Role userRole = roleRepository.findByName("ROLE_USER")
+            .orElseThrow(() -> {
+                String message = messageSource.getMessage("error.role.notfound", new Object[]{"ROLE_USER"}, locale);
+                return new ResourceNotFoundException(message);
+            });
+
         // Create new user
         User user = new User();
         user.setUsername(registerRequest.getUsername());
@@ -54,7 +64,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
-        user.setRole("ROLE_USER");
+        user.getRoles().add(userRole);
         user.setEnabled(true);
         user.setLanguagePreference(
             registerRequest.getLanguagePreference() != null ?
@@ -81,7 +91,7 @@ public class AuthService {
                 savedUser.getEmail(),
                 savedUser.getFirstName(),
                 savedUser.getLastName(),
-                savedUser.getRole(),
+                savedUser.getRoles().stream().map(Role::getName).toList(),
                 savedUser.getLanguagePreference()
         );
     }
@@ -111,7 +121,7 @@ public class AuthService {
                 user.getEmail(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getRole(),
+                user.getRoles().stream().map(Role::getName).toList(),
                 user.getLanguagePreference()
         );
     }

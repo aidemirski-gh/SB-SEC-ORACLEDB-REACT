@@ -3,6 +3,9 @@ import { useAuth } from './context/AuthContext'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import RoleManagement from './pages/admin/RoleManagement'
+import UserManagement from './pages/admin/UserManagement'
+import PrivilegeManagement from './pages/admin/PrivilegeManagement'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -31,6 +34,30 @@ function App() {
         element={
           <ProtectedRoute>
             <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/roles"
+        element={
+          <ProtectedRoute>
+            <RoleManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/users"
+        element={
+          <ProtectedRoute>
+            <UserManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/privileges"
+        element={
+          <ProtectedRoute>
+            <PrivilegeManagement />
           </ProtectedRoute>
         }
       />

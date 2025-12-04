@@ -77,8 +77,8 @@ export default function Dashboard() {
               </div>
             )}
             <div className="flex border-b pb-2">
-              <span className="font-semibold text-gray-700 w-32">{t('dashboard.userInfo.role')}</span>
-              <span className="text-gray-600">{user?.role}</span>
+              <span className="font-semibold text-gray-700 w-32">{t('dashboard.userInfo.roles')}</span>
+              <span className="text-gray-600">{user?.roles.join(', ')}</span>
             </div>
             <div className="flex pb-2">
               <span className="font-semibold text-gray-700 w-32">{t('dashboard.userInfo.userId')}</span>
@@ -86,6 +86,39 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        {/* Admin Panel - Only visible for ROLE_ADMIN */}
+        {user?.roles.includes('ROLE_ADMIN') && (
+          <div className="bg-white rounded-lg shadow p-6 mt-8">
+            <h2 className="text-xl font-bold text-gray-800 mb-4">
+              {t('dashboard.admin.title')}
+            </h2>
+            <p className="text-gray-600 mb-6">{t('dashboard.admin.description')}</p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <button
+                onClick={() => navigate('/admin/users')}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-4 rounded-lg transition duration-200 text-left"
+              >
+                <div className="font-semibold text-lg mb-1">{t('dashboard.admin.manageUsers')}</div>
+                <div className="text-blue-100 text-sm">{t('dashboard.admin.manageUsersDesc')}</div>
+              </button>
+              <button
+                onClick={() => navigate('/admin/roles')}
+                className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-4 rounded-lg transition duration-200 text-left"
+              >
+                <div className="font-semibold text-lg mb-1">{t('dashboard.admin.manageRoles')}</div>
+                <div className="text-purple-100 text-sm">{t('dashboard.admin.manageRolesDesc')}</div>
+              </button>
+              <button
+                onClick={() => navigate('/admin/privileges')}
+                className="bg-green-600 hover:bg-green-700 text-white px-6 py-4 rounded-lg transition duration-200 text-left"
+              >
+                <div className="font-semibold text-lg mb-1">{t('dashboard.admin.managePrivileges')}</div>
+                <div className="text-green-100 text-sm">{t('dashboard.admin.managePrivilegesDesc')}</div>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

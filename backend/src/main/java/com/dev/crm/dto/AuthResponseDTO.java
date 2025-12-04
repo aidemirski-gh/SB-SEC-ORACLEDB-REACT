@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -16,17 +18,17 @@ public class AuthResponseDTO {
     private String email;
     private String firstName;
     private String lastName;
-    private String role;
+    private List<String> roles;
     private String languagePreference;
 
-    public AuthResponseDTO(String token, Long id, String username, String email, String firstName, String lastName, String role, String languagePreference) {
+    public AuthResponseDTO(String token, Long id, String username, String email, String firstName, String lastName, List<String> roles, String languagePreference) {
         this.token = token;
         this.id = id;
         this.username = username;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.role = role;
+        this.roles = roles;
         this.languagePreference = languagePreference;
     }
 }
